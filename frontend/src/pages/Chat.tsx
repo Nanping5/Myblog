@@ -788,7 +788,7 @@ export default function Chat() {
         .input-wrapper {
           display: flex;
           gap: 0.75rem;
-          align-items: flex-end;
+          align-items: center;
         }
         
         .input-container {
@@ -798,7 +798,7 @@ export default function Chat() {
         
         .chat-input {
           width: 100%;
-          padding: 1rem 1.25rem;
+          padding: 0.875rem 1.25rem;
           background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: 14px;
@@ -806,9 +806,11 @@ export default function Chat() {
           font-size: 0.95rem;
           font-family: inherit;
           resize: none;
+          height: 52px;
           min-height: 52px;
           max-height: 150px;
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          box-sizing: border-box;
         }
         
         .chat-input::placeholder {
@@ -887,6 +889,13 @@ export default function Chat() {
           animation: fadeIn 0.5s ease;
         }
         
+        /* Header左侧按钮组 */
+        .chat-header-left {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        
         /* 移动端菜单按钮 */
         .mobile-menu-btn {
           display: none;
@@ -904,6 +913,26 @@ export default function Chat() {
         
         .mobile-menu-btn:hover {
           background: rgba(255,255,255,0.1);
+        }
+        
+        /* Header新对话按钮 */
+        .new-chat-header-btn {
+          display: none;
+          width: 40px;
+          height: 40px;
+          background: rgba(99,102,241,0.1);
+          border: 1px solid rgba(99,102,241,0.2);
+          border-radius: 10px;
+          color: #a5b4fc;
+          cursor: pointer;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+        }
+        
+        .new-chat-header-btn:hover {
+          background: rgba(99,102,241,0.2);
+          border-color: rgba(99,102,241,0.4);
         }
         
         /* 侧边栏遮罩 */
@@ -1060,6 +1089,10 @@ export default function Chat() {
           }
           
           .mobile-menu-btn {
+            display: flex;
+          }
+          
+          .new-chat-header-btn {
             display: flex;
           }
           
@@ -1239,9 +1272,14 @@ export default function Chat() {
       {/* 主聊天区 */}
       <main className="chat-main">
         <header className="chat-header">
-          <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)}>
-            <Icons.menu />
-          </button>
+          <div className="chat-header-left">
+            <button className="mobile-menu-btn" onClick={() => setSidebarOpen(true)}>
+              <Icons.menu />
+            </button>
+            <button className="new-chat-header-btn" onClick={createNewConversation} title="新对话">
+              <Icons.plus />
+            </button>
+          </div>
           <div className="chat-header-info">
             <h1>{selectedCharacter?.name || '莫诺'}</h1>
             <p>{currentConversation?.title || '新对话'}</p>
