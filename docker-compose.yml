@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: personal-website-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: personal_website
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: personal-website-backend
+    environment:
+      DATABASE_DSN: "root:password@tcp(mysql:3306)/personal_website?charset=utf8mb4&parseTime=True&loc=Local"
+      SERVER_PORT: ":8080"
+      JWT_SECRET: "your-secret-key-change-this"
+      ENCRYPTION_KEY: "your-32-byte-encryption-key!!"
+      # AI服务配置（按需配置）
+      GLM_API_KEY: ${GLM_API_KEY:-}
+      GLM_API_URL: ${GLM_API_URL:-https://open.bigmodel.cn/api/paas/v4}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      DEEPSEEK_API_URL: ${DEEPSEEK_API_URL:-https://api.deepseek.com/v1}
+      QWEN_API_KEY: ${QWEN_API_KEY:-}
+      QWEN_API_URL: ${QWEN_API_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      KIMI_API_KEY: ${KIMI_API_KEY:-}
+      KIMI_API_URL: ${KIMI_API_URL:-https://api.moonshot.cn/v1}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    volumes:
+      - ./backend/uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: personal-website-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
